@@ -6,6 +6,12 @@ import android.widget.Button
 import android.widget.TextView
 
 class MainActivity : AppCompatActivity() {
+
+
+    var currentResult:Float = 0.0F
+
+    var currentOperation:String = "plus"
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -26,16 +32,14 @@ class MainActivity : AppCompatActivity() {
         val btnDivide:Button = findViewById(R.id.btnDivide)
         val btnCalculate:Button = findViewById(R.id.btnCalculate)
         val btnDelete:Button = findViewById(R.id.btnDelete)
+
         var tvResult:TextView = findViewById(R.id.tvResult)
         var tvInput:TextView = findViewById(R.id.tvInput)
 
-        var currentResult:Float = 0f
 
-        var currentOperation:String = ""
 
         btn0.setOnClickListener{
             tvInput.setText(tvInput.text.toString() + "0")
-
         }
 
         btn1.setOnClickListener{
@@ -77,27 +81,13 @@ class MainActivity : AppCompatActivity() {
         btnDelete.setOnClickListener{
             tvInput.setText("")
             tvResult.setText("")
-            currentResult = 0f
+            currentOperation = "plus"
+            currentResult = 0F
         }
 
         btnCalculate.setOnClickListener{
 
-
-            if(currentOperation == "plus"){
-                currentResult = currentResult + tvInput.text.toString().toInt()
-            }
-
-            if(currentOperation == "minus"){
-                currentResult = currentResult - tvInput.text.toString().toInt()
-            }
-
-            if(currentOperation == "multiply"){
-                currentResult = currentResult * tvInput.text.toString().toInt()
-            }
-
-            if(currentOperation == "divide"){
-                currentResult = currentResult / tvInput.text.toString().toInt()
-            }
+            clearBackOperation()
 
             tvResult.setText(currentResult.toString())
             tvInput.setText("")
@@ -105,25 +95,57 @@ class MainActivity : AppCompatActivity() {
         }
 
         btnPlus.setOnClickListener{
-            tvResult.setText(tvInput.text.toString() + "+")
-
-            var userInput:Int = tvInput.text.toString().toInt()
-
-            currentResult = currentResult + userInput
+            if(currentOperation != "plus"){
+                clearBackOperation()
+            }
 
 
+            var userInput: Float = 0f
+
+            if (currentResult != 0f) {
+                tvResult.setText(currentResult.toString() + " + ")
+
+                if (!tvInput.text.toString().isBlank()) {
+                    userInput = tvInput.text.toString().toFloat()
+                    tvResult.setText(currentResult.toString() + " + " + tvInput.text.toString() + " + ")
+                }
+
+                currentResult = currentResult + userInput
+
+            } else if(!tvInput.text.toString().isBlank()){
+                tvResult.setText(tvInput.text.toString() + " + ")
+                currentResult = tvInput.text.toString().toFloat()
+            }
 
             tvInput.setText("")
 
             currentOperation = "plus"
+
         }
 
         btnMinus.setOnClickListener{
-            tvResult.setText(tvInput.text.toString() + "-")
+            if(currentOperation != "minus"){
+                clearBackOperation()
+            }
 
-            var userInput:Int = tvInput.text.toString().toInt()
+            var userInput: Float = 0f
 
-            currentResult = currentResult - userInput
+
+
+            if (currentResult != 0f) {
+                tvResult.setText(currentResult.toString() + " - ")
+
+                if (!tvInput.text.toString().isBlank()) {
+                    userInput = tvInput.text.toString().toFloat()
+                    tvResult.setText(currentResult.toString() + " - " + tvInput.text.toString() + " - ")
+                }
+
+                currentResult = currentResult - userInput
+
+            } else if(!tvInput.text.toString().isBlank()){
+                tvResult.setText(tvInput.text.toString() + " - ")
+                currentResult -= tvInput.text.toString().toFloat()
+            }
 
             tvInput.setText("")
 
@@ -131,27 +153,126 @@ class MainActivity : AppCompatActivity() {
         }
 
         btnMultiply.setOnClickListener{
-            tvResult.setText(tvInput.text.toString() + "*")
+            if(currentOperation != "multiply"){
+                clearBackOperation()
+            }
 
-            var userInput:Int = tvInput.text.toString().toInt()
+            var userInput:Float = 0f
 
-            currentResult = currentResult * userInput
+            if(tvInput.text.isNotBlank()){
 
+                userInput = tvInput.text.toString().toFloat()
+
+
+                tvResult.text = "$currentResult * "
+
+                if (tvInput.text.toString().isNotBlank()) {
+                    userInput = tvInput.text.toString().toFloat()
+                    tvResult.setText(currentResult.toString() + " * " + tvInput.text.toString() + " * ")
+                }else{
+                    currentResult *= userInput
+
+                    tvResult.text = "$currentResult * "
+                }
+
+                currentResult *= userInput
+
+
+            }else{
+                tvResult.text = "$currentResult * "
+            }
+
+
+/*
+            var userInput: Float = 0f
+
+            if (currentResult != 0.0f) {
+                tvResult.setText(currentResult.toString() + " * ")
+
+                if (!tvInput.text.toString().isBlank()) {
+                    userInput = tvInput.text.toString().toFloat()
+                    tvResult.setText(currentResult.toString() + " * " + tvInput.text.toString() + " * ")
+                }
+
+                currentResult = currentResult * userInput
+
+            } else if(!tvInput.text.toString().isBlank()){
+                tvResult.setText(tvInput.text.toString() + " * ")
+                currentResult = tvInput.text.toString().toFloat()
+            }
+
+
+ */
             tvInput.setText("")
 
             currentOperation = "multiply"
+
+
         }
 
         btnDivide.setOnClickListener{
-            tvResult.setText(tvInput.text.toString() + "/")
+            if(currentOperation != "divide"){
+                clearBackOperation()
+            }
 
-            var userInput:Int = tvInput.text.toString().toInt()
+            var userInput:Float = 0f
 
-            currentResult = currentResult / userInput
+            if(tvInput.text.isNotBlank()){
+
+                userInput = tvInput.text.toString().toFloat()
+
+                    if(userInput == 0F){
+                        tvResult.text = "Can't Divide by 0"
+                    }
+
+                    tvResult.text = "$currentResult / "
+
+                    if (tvInput.text.toString().isNotBlank()) {
+                        tvResult.setText(currentResult.toString() + " / " + tvInput.text.toString() + " / ")
+                    } else {
+                        currentResult /= userInput
+
+                        tvResult.text = "$currentResult / "
+                    }
+
+                    currentResult /= userInput
+
+            }else{
+                tvResult.text = "$currentResult / "
+            }
 
             tvInput.setText("")
 
             currentOperation = "divide"
         }
+    }
+
+    fun clearBackOperation(){
+
+        var tvResult:TextView = findViewById(R.id.tvResult)
+        var tvInput:TextView = findViewById(R.id.tvInput)
+
+        if(currentOperation == "plus" && !tvInput.text.toString().isBlank()){
+            currentResult = currentResult + tvInput.text.toString().toInt()
+        }
+
+        if(currentOperation == "minus" && !tvInput.text.toString().isBlank()){
+            currentResult = currentResult - tvInput.text.toString().toInt()
+        }
+
+        if(currentOperation == "multiply" && tvInput.text.toString().isNotBlank()){
+            currentResult = currentResult * tvInput.text.toString().toInt()
+        }
+
+        if(currentOperation == "divide" && !tvInput.text.toString().isBlank()){
+            if(tvInput.text.toString().toInt() != 0) {
+                currentResult = currentResult / tvInput.text.toString().toInt()
+            }
+        }
+
+        tvInput.text = ""
+
+        currentOperation = ""
+
     }
 }
